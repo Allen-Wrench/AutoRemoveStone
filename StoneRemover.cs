@@ -56,7 +56,6 @@ namespace AutoRemoveStone
 						}
 					}
 				}
-				MyAPIGateway.Utilities.ShowNotification(string.Format("Removed {0:N0} stone.", num), 2000, "White");
 			}
 		}
 
