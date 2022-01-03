@@ -4,8 +4,10 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using HarmonyLib;
+using Sandbox.Game.Entities;
 using Sandbox.Game.Gui;
 using Sandbox.Game.Weapons;
+using Sandbox.Game.World;
 using VRage.Utils;
 
 namespace AutoRemoveStone
@@ -15,7 +17,7 @@ namespace AutoRemoveStone
 	{
 		public static void AutoRemoveStone(MyShipDrill drill)
 		{
-			StoneRemover.AutoStoneRemoval(null);
+			StoneRemover.AutoStoneRemoval(!StoneRemover.AutoRemoveStone);
 		}
 
 		public static void ShipDrillControls()
@@ -24,11 +26,12 @@ namespace AutoRemoveStone
 			myTerminalControlOnOffSwitch.Getter = (MyShipDrill x) => StoneRemover.AutoRemoveStone;
 			myTerminalControlOnOffSwitch.Setter = delegate (MyShipDrill x, bool v)
 			{
-				StoneRemover.AutoStoneRemoval(new bool?(v));
+				StoneRemover.AutoStoneRemoval(v);
 			};
+			myTerminalControlOnOffSwitch.SupportsMultipleBlocks = false;
 			MyTerminalControlFactory.AddControl<MyShipDrill>(myTerminalControlOnOffSwitch);
 			MyTerminalAction<MyShipDrill> myTerminalAction = new MyTerminalAction<MyShipDrill>("AutoStoneRemove", new StringBuilder("Auto Remove Stone"), "");
-			myTerminalAction.Action = new Action<MyShipDrill>(TerminalPatches.AutoRemoveStone);
+			myTerminalAction.Action = new Action<MyShipDrill>(AutoRemoveStone);
 			myTerminalAction.Writer = delegate (MyShipDrill block, StringBuilder builder)
 			{
 				if (StoneRemover.AutoRemoveStone)
@@ -46,7 +49,7 @@ namespace AutoRemoveStone
 		[HarmonyPatch(typeof(MyShipDrill), "CreateTerminalControls")]
 		public static IEnumerable<CodeInstruction> ShipDrillTranspiler(IEnumerable<CodeInstruction> instructions)
 		{
-			int index = instructions.Count<CodeInstruction>() - 1;
+			int index = instructions.Count() - 1;
 			int num;
 			for (int i = 0; i < index; i = num + 1)
 			{
