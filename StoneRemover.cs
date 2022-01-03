@@ -23,6 +23,7 @@ namespace AutoRemoveStone
 				MySession.Static.AddUpdateCallback(new MyUpdateCallback(new Func<bool>(Update)));
 				return;
 			}
+			AutoRemoveStone = false;
 		}
 
 		public static bool Update()
