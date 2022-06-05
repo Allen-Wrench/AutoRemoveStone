@@ -13,23 +13,24 @@ namespace AutoRemoveStone
 {
 	public static class StoneRemover
 	{
-		public static void AutoStoneRemoval(bool enabled)
+		public static void EnableMode(Mode voidMode = Mode.Off)
 		{
-			if (enabled == AutoRemoveStone)
-				return;
-			if (!AutoRemoveStone && MySession.Static.ControlledEntity is MyCubeBlock)
+			if (!Enabled && voidMode != Mode.Off)
 			{
-				AutoRemoveStone = enabled;
+				VoidMode = voidMode;
+				Enabled = true;
 				MySession.Static.AddUpdateCallback(new MyUpdateCallback(new Func<bool>(Update)));
 				return;
 			}
-			AutoRemoveStone = false;
+			Enabled = false;
+			VoidMode = Mode.Off;
 		}
 
 		public static bool Update()
 		{
-			if (!AutoRemoveStone)
+			if (!Enabled)
 			{
+				VoidMode = Mode.Off;
 				return true;
 			}
 			if (Counter < 500)
@@ -49,7 +50,7 @@ namespace AutoRemoveStone
 					{
 						for (int j = 0; j < items.Count; j++)
 						{
-							if (items[j].Content.SubtypeName.Contains("Stone"))
+							if (items[j].Content.SubtypeName.Contains(VoidMode.ToString()))
 							{
 								inventory.RemoveItemsAt(inventory.GetItemIndexById(items[j].ItemId), new MyFixedPoint?(items[j].Amount), true, false, null);
 							}
@@ -58,11 +59,17 @@ namespace AutoRemoveStone
 				}
 				return false;
 			}
-			AutoRemoveStone = false;
+			Enabled = false;
 			return true;
 		}
-		public static bool AutoRemoveStone { get; private set; }
-
-		public static int Counter { get; private set; }
+		public static bool Enabled = false;
+		public static Mode VoidMode { get; private set; } = Mode.Off;
+		private static int Counter = 0;
+		public enum Mode
+        {
+			Off,
+			Stone,
+			Ice
+        };
 	}
 }
