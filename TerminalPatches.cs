@@ -30,7 +30,7 @@ namespace AutoRemoveStone
 			myTerminalAction.Action = delegate (MyShipDrill x) { StoneRemover.EnableMode(StoneRemover.Mode.Stone); } ;
 			myTerminalAction.Writer = delegate (MyShipDrill block, StringBuilder builder)
 			{
-				builder.Append($"Void {StoneRemover.VoidMode}");
+				builder.Append($"{StoneRemover.VoidMode} {StoneRemover.Counter / 10:N0}");
 			};
 			myTerminalAction.ValidForGroups = false;
 			MyTerminalControlFactory.AddAction<MyShipDrill>(myTerminalAction);
@@ -51,10 +51,31 @@ namespace AutoRemoveStone
 			myTerminalAction2.Action = delegate (MyShipDrill x) { StoneRemover.EnableMode(StoneRemover.Mode.Ice); };
 			myTerminalAction2.Writer = delegate (MyShipDrill block, StringBuilder builder)
 			{
-				builder.Append($"Void {StoneRemover.VoidMode}");
+				builder.Append($"{StoneRemover.VoidMode} {StoneRemover.Counter/10:N0}");
 			};
 			myTerminalAction2.ValidForGroups = false;
 			MyTerminalControlFactory.AddAction<MyShipDrill>(myTerminalAction2);
+
+			MyTerminalControlOnOffSwitch<MyShipDrill> myTerminalControlOnOffSwitch3 = new MyTerminalControlOnOffSwitch<MyShipDrill>("AutoVoidBoth", MyStringId.GetOrCompute("Void Both"));
+			myTerminalControlOnOffSwitch3.Getter = (MyShipDrill x) => StoneRemover.Enabled && StoneRemover.VoidMode == StoneRemover.Mode.Both;
+			myTerminalControlOnOffSwitch3.Setter = delegate (MyShipDrill x, bool v)
+			{
+				StoneRemover.EnableMode(StoneRemover.Mode.Both);
+			};
+			myTerminalControlOnOffSwitch2.DynamicTooltipGetter = delegate (MyShipDrill drill)
+			{
+				return $"Toggle voiding of Stone and Ice.";
+			};
+			myTerminalControlOnOffSwitch3.SupportsMultipleBlocks = false;
+			MyTerminalControlFactory.AddControl<MyShipDrill>(myTerminalControlOnOffSwitch3);
+			MyTerminalAction<MyShipDrill> myTerminalAction3 = new MyTerminalAction<MyShipDrill>("VoidBoth", new StringBuilder("Toggle Stone and Ice voiding"), "");
+			myTerminalAction3.Action = delegate (MyShipDrill x) { StoneRemover.EnableMode(StoneRemover.Mode.Both); };
+			myTerminalAction3.Writer = delegate (MyShipDrill block, StringBuilder builder)
+			{
+				builder.Append($"{StoneRemover.VoidMode} {StoneRemover.Counter / 10:N0}");
+			};
+			myTerminalAction3.ValidForGroups = false;
+			MyTerminalControlFactory.AddAction<MyShipDrill>(myTerminalAction3);
 		}
 
 		[HarmonyTranspiler]

@@ -31,14 +31,15 @@ namespace AutoRemoveStone
 			if (!Enabled)
 			{
 				VoidMode = Mode.Off;
+				Counter = 0;
 				return true;
 			}
-			if (Counter < 500)
+			if (Counter > 0)
 			{
-				Counter++;
+				Counter--;
 				return false;
 			}
-			Counter = 0;
+			Counter = 300;
 			if (MySession.Static.ControlledEntity is MyCubeBlock)
 			{
 				HashSet<MyCubeBlock> inventories = (MySession.Static.ControlledEntity as MyCubeBlock).CubeGrid.Inventories;
@@ -50,9 +51,19 @@ namespace AutoRemoveStone
 					{
 						for (int j = 0; j < items.Count; j++)
 						{
-							if (items[j].Content.SubtypeName.Contains(VoidMode.ToString()))
+							if (VoidMode == Mode.Stone || VoidMode == Mode.Both)
 							{
-								inventory.RemoveItemsAt(inventory.GetItemIndexById(items[j].ItemId), new MyFixedPoint?(items[j].Amount), true, false, null);
+								if (items[j].Content.SubtypeName.Contains("Stone"))
+								{
+									inventory.RemoveItemsAt(inventory.GetItemIndexById(items[j].ItemId), new MyFixedPoint?(items[j].Amount), true, false, null);
+								}
+							}
+							if (VoidMode == Mode.Ice || VoidMode == Mode.Both)
+							{
+								if (items[j].Content.SubtypeName.Contains("Ice"))
+								{
+									inventory.RemoveItemsAt(inventory.GetItemIndexById(items[j].ItemId), new MyFixedPoint?(items[j].Amount), true, false, null);
+								}
 							}
 						}
 					}
@@ -64,12 +75,13 @@ namespace AutoRemoveStone
 		}
 		public static bool Enabled = false;
 		public static Mode VoidMode { get; private set; } = Mode.Off;
-		private static int Counter = 0;
+		public static int Counter { get; private set; } = 0;
 		public enum Mode
         {
 			Off,
 			Stone,
-			Ice
+			Ice,
+			Both
         };
 	}
 }
