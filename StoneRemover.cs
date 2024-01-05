@@ -53,14 +53,14 @@ namespace AutoRemoveStone
 						{
 							if (VoidMode == Mode.Stone || VoidMode == Mode.Both)
 							{
-								if (items[j].Content.SubtypeName.Contains("Stone"))
+								if (items[j].Content.TypeId.ToString().Contains("Ore") && items[j].Content.SubtypeName.Contains("Stone"))
 								{
 									inventory.RemoveItemsAt(inventory.GetItemIndexById(items[j].ItemId), new MyFixedPoint?(items[j].Amount), true, false, null);
 								}
 							}
 							if (VoidMode == Mode.Ice || VoidMode == Mode.Both)
 							{
-								if (items[j].Content.SubtypeName.Contains("Ice"))
+								if (items[j].Content.TypeId.ToString().Contains("Ore") && items[j].Content.SubtypeName.Contains("Ice"))
 								{
 									inventory.RemoveItemsAt(inventory.GetItemIndexById(items[j].ItemId), new MyFixedPoint?(items[j].Amount), true, false, null);
 								}
@@ -77,11 +77,11 @@ namespace AutoRemoveStone
 		public static Mode VoidMode { get; private set; } = Mode.Off;
 		public static int Counter { get; private set; } = 0;
 		public enum Mode
-        {
+        	{
 			Off,
 			Stone,
 			Ice,
 			Both
-        };
+        	};
 	}
 }
