@@ -55,14 +55,14 @@ namespace AutoRemoveStone
 							{
 								if (items[j].Content.TypeId.ToString().Contains("Ore") && items[j].Content.SubtypeName.Contains("Stone"))
 								{
-									inventory.RemoveItemsAt(inventory.GetItemIndexById(items[j].ItemId), new MyFixedPoint?(items[j].Amount), true, false, null);
+									inventory.RemoveItemsAt(inventory.GetItemIndexById(items[j].ItemId), new MyFixedPoint?(items[j].Amount), true, false);
 								}
 							}
 							if (VoidMode == Mode.Ice || VoidMode == Mode.Both)
 							{
 								if (items[j].Content.TypeId.ToString().Contains("Ore") && items[j].Content.SubtypeName.Contains("Ice"))
 								{
-									inventory.RemoveItemsAt(inventory.GetItemIndexById(items[j].ItemId), new MyFixedPoint?(items[j].Amount), true, false, null);
+									inventory.RemoveItemsAt(inventory.GetItemIndexById(items[j].ItemId), new MyFixedPoint?(items[j].Amount), true, false);
 								}
 							}
 						}
