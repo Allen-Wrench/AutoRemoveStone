@@ -56,6 +56,7 @@ namespace AutoRemoveStone
 								if (items[j].Content.TypeId.ToString().Contains("Ore") && items[j].Content.SubtypeName.Contains("Stone"))
 								{
 									inventory.RemoveItemsAt(inventory.GetItemIndexById(items[j].ItemId), new MyFixedPoint?(items[j].Amount));
+									break;
 								}
 							}
 							if (VoidMode == Mode.Ice || VoidMode == Mode.Both)
